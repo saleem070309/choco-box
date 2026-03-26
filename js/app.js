@@ -79,9 +79,13 @@
         if (s.facebookUrl) CFG.facebook = s.facebookUrl;
         if (s.geminiKey) CFG.geminiKey = s.geminiKey;
         if (s.geminiModel) CFG.geminiModel = s.geminiModel;
+        // Apply changes to UI
         applyConfigUI();
+        console.log('Remote config loaded successfully ✨');
       }
-    } catch (e) { console.warn('Remote config load failed:', e); }
+    } catch (e) { 
+      console.warn('Remote config load failed:', e); 
+    }
   }
 
   function applyConfigUI() {
