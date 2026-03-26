@@ -47,7 +47,9 @@
       facebookUrl: config.facebookUrl,
       geminiKey: config.geminiKey,
       geminiModel: config.geminiModel,
-      adminPassword: config.password
+      adminPassword: config.password,
+      introSounds: JSON.stringify(sounds),
+      alwaysShowIntro: document.getElementById('setting-always-intro').checked ? 'true' : 'false'
     });
   }
 
@@ -360,8 +362,16 @@
   function populateChocoSettings() {
     document.getElementById('setting-gemini-key').value = config.geminiKey || '';
     document.getElementById('setting-gemini-model').value = config.geminiModel || 'gemini-2.0-flash';
-    document.getElementById('setting-always-intro').checked = localStorage.getItem('chocobox_always_intro') === 'true';
-    try { sounds = JSON.parse(localStorage.getItem('chocobox_sounds') || '[]'); } catch (e) { sounds = []; }
+    
+    const remoteAlwaysIntro = config.alwaysShowIntro === 'true';
+    const localAlwaysIntro = localStorage.getItem('chocobox_always_intro') === 'true';
+    document.getElementById('setting-always-intro').checked = config.alwaysShowIntro !== undefined ? remoteAlwaysIntro : localAlwaysIntro;
+
+    try { 
+      const remoteSounds = config.introSounds ? JSON.parse(config.introSounds) : null;
+      const localSounds = JSON.parse(localStorage.getItem('chocobox_sounds') || '[]');
+      sounds = remoteSounds || localSounds;
+    } catch (e) { sounds = []; }
     renderSoundList();
   }
   function renderSoundList() {
