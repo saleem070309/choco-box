@@ -8,7 +8,7 @@
 
 window.CHOCO_CONFIG = {
   // رابط Google Apps Script Web App
-  API_URL: '',
+  API_URL: 'https://script.google.com/macros/s/AKfycbxoRaKkmPuzFusdvzkTwXrAhVn4FfFXZFUheS7dftK9RGW7VE0G7rmPOQelMg5wy6wVCg/exec',
 
   // رقم واتساب للتواصل
   WHATSAPP: '962XXXXXXXXX',
