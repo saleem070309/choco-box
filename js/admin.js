@@ -44,7 +44,10 @@
     saveRemoteSettings({
       apiUrl: config.apiUrl,
       whatsappNumber: config.whatsappNumber,
-      facebookUrl: config.facebookUrl
+      facebookUrl: config.facebookUrl,
+      geminiKey: config.geminiKey,
+      geminiModel: config.geminiModel,
+      adminPassword: config.password
     });
   }
 
@@ -376,13 +379,6 @@
     config.geminiKey = document.getElementById('setting-gemini-key').value.trim();
     config.geminiModel = document.getElementById('setting-gemini-model').value.trim() || 'gemini-2.0-flash';
     saveConfig();
-
-    // Also save AI specific settings to remote
-    saveRemoteSettings({
-      geminiKey: config.geminiKey,
-      geminiModel: config.geminiModel
-    });
-
     localStorage.setItem('chocobox_sounds', JSON.stringify(sounds));
     const alwaysIntro = document.getElementById('setting-always-intro').checked;
     localStorage.setItem('chocobox_always_intro', alwaysIntro ? 'true' : 'false');
