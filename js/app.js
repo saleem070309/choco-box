@@ -41,8 +41,9 @@
     initCartUI();
     initQtyModal();
     initChocoChat();
-    // Load products immediately (loads while intro plays)
+    // Load products and remote config
     loadProducts();
+    loadRemoteConfig();
   });
 
   // ─── Merge config.js + localStorage ───
@@ -55,7 +56,7 @@
     if (g.GEMINI_API_KEY) CFG.geminiKey = g.GEMINI_API_KEY;
     if (g.GEMINI_MODEL) CFG.geminiModel = g.GEMINI_MODEL;
 
-    // localStorage overrides
+    // localStorage overrides (optional, but remote will typically overwrite these)
     try {
       const saved = JSON.parse(localStorage.getItem('chocobox_settings') || '{}');
       if (saved.apiUrl) CFG.apiUrl = saved.apiUrl;
@@ -64,12 +65,29 @@
       if (saved.geminiKey) CFG.geminiKey = saved.geminiKey;
       if (saved.geminiModel) CFG.geminiModel = saved.geminiModel;
     } catch (e) {}
+    applyConfigUI();
+  }
 
-    // Apply facebook links
+  async function loadRemoteConfig() {
+    if (!CFG.apiUrl) return;
+    try {
+      const res = await fetch(`${CFG.apiUrl}?action=getSettings`);
+      const data = await res.json();
+      if (data.status === 'success' && data.settings) {
+        const s = data.settings;
+        if (s.whatsappNumber) CFG.whatsapp = s.whatsappNumber;
+        if (s.facebookUrl) CFG.facebook = s.facebookUrl;
+        if (s.geminiKey) CFG.geminiKey = s.geminiKey;
+        if (s.geminiModel) CFG.geminiModel = s.geminiModel;
+        applyConfigUI();
+      }
+    } catch (e) { console.warn('Remote config load failed:', e); }
+  }
+
+  function applyConfigUI() {
     if (CFG.facebook) {
       document.querySelectorAll('a[title="فيسبوك"]').forEach(el => { el.href = CFG.facebook; });
     }
-    // Apply whatsapp link
     const waLink = document.getElementById('whatsapp-link');
     if (waLink) waLink.href = `https://wa.me/${CFG.whatsapp}`;
   }
