@@ -14,7 +14,7 @@ window.CHOCO_CONFIG = {
   WHATSAPP: '962XXXXXXXXX',
 
   // رابط صفحة فيسبوك
-  FACEBOOK: 'https://www.facebook.com/profile.php?id=61575311498498',
+  FACEBOOK: 'https://web.facebook.com/profile.php?id=61583604596426',
 
   // مفتاح Gemini API لشوكو المساعد الذكي
   GEMINI_API_KEY: '',
