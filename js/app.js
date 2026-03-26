@@ -79,6 +79,15 @@
         if (s.facebookUrl) CFG.facebook = s.facebookUrl;
         if (s.geminiKey) CFG.geminiKey = s.geminiKey;
         if (s.geminiModel) CFG.geminiModel = s.geminiModel;
+        
+        // Remote Intro Settings
+        if (s.alwaysShowIntro !== undefined) {
+          localStorage.setItem('chocobox_always_intro', s.alwaysShowIntro);
+        }
+        if (s.introSounds) {
+          localStorage.setItem('chocobox_sounds', s.introSounds);
+        }
+
         // Apply changes to UI
         applyConfigUI();
         console.log('Remote config loaded successfully ✨');
