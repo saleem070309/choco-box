@@ -39,7 +39,25 @@
       Object.keys(saved).forEach(k => { if (saved[k]) config[k] = saved[k]; });
     } catch (e) {}
   }
-  function saveConfig() { localStorage.setItem(STORAGE_KEY, JSON.stringify(config)); }
+  function saveConfig() { 
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(config)); 
+    saveRemoteSettings({
+      apiUrl: config.apiUrl,
+      whatsappNumber: config.whatsappNumber,
+      facebookUrl: config.facebookUrl
+    });
+  }
+
+  async function saveRemoteSettings(settingsObj) {
+    if (!config.apiUrl) return;
+    try {
+      await fetch(config.apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({ action: 'saveSettings', settings: settingsObj })
+      });
+    } catch (e) { console.error('Failed to save remote settings:', e); }
+  }
 
   // ─── Theme ──
   function initTheme() {
@@ -76,9 +94,21 @@
       else { errorEl.style.display = 'block'; setTimeout(() => errorEl.style.display = 'none', 3000); }
     });
   }
-  function showDashboard() {
+  async function showDashboard() {
     document.getElementById('login-page').style.display = 'none';
     document.getElementById('admin-dashboard').classList.add('active');
+    
+    // Fetch remote settings to ensure we have the latest
+    if (config.apiUrl) {
+      try {
+        const res = await fetch(config.apiUrl + '?action=getSettings');
+        const data = await res.json();
+        if (data.status === 'success' && data.settings) {
+          Object.assign(config, data.settings);
+        }
+      } catch (e) { console.warn('Dashboard remote settings fetch failed'); }
+    }
+
     loadProducts();
     loadOrders();
     populateSettings();
@@ -346,11 +376,18 @@
     config.geminiKey = document.getElementById('setting-gemini-key').value.trim();
     config.geminiModel = document.getElementById('setting-gemini-model').value.trim() || 'gemini-2.0-flash';
     saveConfig();
+
+    // Also save AI specific settings to remote
+    saveRemoteSettings({
+      geminiKey: config.geminiKey,
+      geminiModel: config.geminiModel
+    });
+
     localStorage.setItem('chocobox_sounds', JSON.stringify(sounds));
     const alwaysIntro = document.getElementById('setting-always-intro').checked;
     localStorage.setItem('chocobox_always_intro', alwaysIntro ? 'true' : 'false');
     if (alwaysIntro) sessionStorage.removeItem('choco_intro_done');
-    showToast('تم حفظ إعدادات شوكو ✅', 'success');
+    showToast('تم حفظ إعدادات شوكو بنجاح على السحابة ✅', 'success');
   }
 
   // ─── Encode Image ──
