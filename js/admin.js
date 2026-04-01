@@ -369,7 +369,8 @@
 
     try { 
       const remoteSounds = config.introSounds ? JSON.parse(config.introSounds) : null;
-      const localSounds = JSON.parse(localStorage.getItem('chocobox_sounds') || '[]');
+      const localSoundsRaw = localStorage.getItem('chocobox_sounds');
+      const localSounds = localSoundsRaw ? JSON.parse(localSoundsRaw) : (window.CHOCO_CONFIG?.INTRO_SOUNDS || []);
       sounds = remoteSounds || localSounds;
     } catch (e) { sounds = []; }
     renderSoundList();
