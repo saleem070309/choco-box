@@ -29,6 +29,7 @@
     loadCartFromStorage();
     updateCartCount();
     initIntro();
+    initIntroToggle();
     initSearch();
     initCustomOrderModal();
     initTrackOrderModal();
@@ -64,7 +65,7 @@
       if (saved.facebookUrl) CFG.facebook = saved.facebookUrl;
       if (saved.geminiKey) CFG.geminiKey = saved.geminiKey;
       if (saved.geminiModel) CFG.geminiModel = saved.geminiModel;
-    } catch (e) {}
+    } catch (e) { }
     applyConfigUI();
   }
 
@@ -79,10 +80,13 @@
         if (s.facebookUrl) CFG.facebook = s.facebookUrl;
         if (s.geminiKey) CFG.geminiKey = s.geminiKey;
         if (s.geminiModel) CFG.geminiModel = s.geminiModel;
-        
+
         // Remote Intro Settings
         if (s.alwaysShowIntro !== undefined) {
           localStorage.setItem('chocobox_always_intro', s.alwaysShowIntro);
+        }
+        if (s.enableIntroGlobal !== undefined) {
+          localStorage.setItem('chocobox_global_intro_enabled', s.enableIntroGlobal);
         }
         if (s.introSounds) {
           localStorage.setItem('chocobox_sounds', s.introSounds);
@@ -92,8 +96,8 @@
         applyConfigUI();
         console.log('Remote config loaded successfully ✨');
       }
-    } catch (e) { 
-      console.warn('Remote config load failed:', e); 
+    } catch (e) {
+      console.warn('Remote config load failed:', e);
     }
   }
 
@@ -139,20 +143,61 @@
   }
   function isDarkMode() { return document.documentElement.getAttribute('data-theme') === 'dark'; }
 
+  function initIntroToggle() {
+    const btn = document.getElementById('intro-toggle-btn');
+    if (!btn) return;
+    const updateUI = (disabled) => {
+      const icon = document.getElementById('intro-toggle-icon');
+      const text = document.getElementById('intro-toggle-text');
+      if (icon) icon.textContent = disabled ? '❌' : '🎬';
+      if (text) text.textContent = disabled ? 'المقدمة: معطلة' : 'المقدمة: مفعلة';
+    };
+    const current = localStorage.getItem('chocobox_intro_disabled') === 'true';
+    updateUI(current);
+    btn.onclick = () => {
+      const next = localStorage.getItem('chocobox_intro_disabled') !== 'true';
+      localStorage.setItem('chocobox_intro_disabled', next);
+      updateUI(next);
+      showToast(next ? 'تم تعطيل المقدمة 🔇' : 'تم تفعيل المقدمة ✨', 'success');
+    };
+  }
+
   // ═══════════════════════════════════════════
   // Intro Animation
   // ═══════════════════════════════════════════
   let introExited = false;
-  const PRODS_EMOJI = ['🍫','🍰','🍩','🍪','🧁','🎂','🍭','🍮','🍦','🍧','🍨','🍡','🍬','🍯'];
-  const RING_COLS = ['#e8779a','#e8853a','#f5c842','#c97b3f','#fdf3e7'];
-  const PCOLS = ['#e8779a','#e8853a','#c97b3f','#f5c842','#fdf3e7'];
+  const PRODS_EMOJI = ['🍫', '🍰', '🍩', '🍪', '🧁', '🎂', '🍭', '🍮', '🍦', '🍧', '🍨', '🍡', '🍬', '🍯'];
+  const RING_COLS = ['#e8779a', '#e8853a', '#f5c842', '#c97b3f', '#fdf3e7'];
+  const PCOLS = ['#e8779a', '#e8853a', '#c97b3f', '#f5c842', '#fdf3e7'];
   let introFloats = [];
   let introCtx, introCvs;
+  let preloadedSounds = [];
+
+  function preloadIntroSounds() {
+    try {
+      const savedSounds = localStorage.getItem('chocobox_sounds');
+      const sounds = savedSounds ? JSON.parse(savedSounds) : (window.CHOCO_CONFIG?.INTRO_SOUNDS || []);
+      preloadedSounds = sounds.map(s => {
+        if (!s.url) return null;
+        const a = new Audio(s.url);
+        a.preload = 'auto'; 
+        a.volume = s.volume || 1;
+        a.load();
+        return { audio: a, delay: s.delay };
+      }).filter(Boolean);
+    } catch (e) { }
+  }
 
   function initIntro() {
+    // Start preloading immediately
+    preloadIntroSounds();
+
     // Check if user wants to skip intro (unless "always show" is enabled)
     const alwaysIntro = localStorage.getItem('chocobox_always_intro') === 'true';
-    if (!alwaysIntro && sessionStorage.getItem('choco_intro_done')) {
+    const introDisabled = localStorage.getItem('chocobox_intro_disabled') === 'true';
+    const globalIntroDisabled = localStorage.getItem('chocobox_global_intro_enabled') === 'false';
+    
+    if (globalIntroDisabled || introDisabled || (!alwaysIntro && sessionStorage.getItem('choco_intro_done'))) {
       document.getElementById('intro-overlay')?.remove();
       document.getElementById('choco-float')?.classList.add('visible');
       return;
@@ -166,10 +211,12 @@
       rsz(); window.addEventListener('resize', rsz);
       const ptcls = [];
       function mkP() {
-        return { x: Math.random() * innerWidth, y: -20, vy: 1.3 + Math.random() * 3, vx: Math.random() - .5,
+        return {
+          x: Math.random() * innerWidth, y: -20, vy: 1.3 + Math.random() * 3, vx: Math.random() - .5,
           size: 3 + Math.random() * 6, color: PCOLS[Math.random() * PCOLS.length | 0],
           opacity: .5 + Math.random() * .45, circle: Math.random() > .5,
-          rot: Math.random() * Math.PI * 2, rs: (Math.random() - .5) * .05 };
+          rot: Math.random() * Math.PI * 2, rs: (Math.random() - .5) * .05
+        };
       }
       for (let i = 0; i < 65; i++) { const p = mkP(); p.y = Math.random() * innerHeight; ptcls.push(p); }
       function tick() {
@@ -197,7 +244,7 @@
   function startIntro() {
     const es = document.getElementById('enter-screen');
     const vid = document.getElementById('intro-vid');
-    if (vid) { vid.volume = 1; vid.currentTime = 0; vid.play().then(() => { vid.pause(); vid.currentTime = 0; }).catch(() => {}); }
+    if (vid) { vid.volume = 1; vid.currentTime = 0; vid.play().then(() => { vid.pause(); vid.currentTime = 0; }).catch(() => { }); }
     es.classList.add('hide');
     setTimeout(() => { es.style.display = 'none'; runIntroSequence(); }, 800);
 
@@ -206,18 +253,14 @@
   }
 
   function playSoundEffects() {
-    try {
-      const sounds = JSON.parse(localStorage.getItem('chocobox_sounds') || '[]');
-      sounds.forEach(s => {
-        if (s.url && s.delay >= 0) {
-          setTimeout(() => {
-            const a = new Audio(s.url);
-            a.volume = s.volume || 1;
-            a.play().catch(() => {});
-          }, s.delay);
-        }
-      });
-    } catch (e) {}
+    preloadedSounds.forEach(s => {
+      if (s.audio && s.delay >= 0) {
+        setTimeout(() => {
+          s.audio.currentTime = 0; // Ensure it starts from beginning
+          s.audio.play().catch(() => { });
+        }, s.delay);
+      }
+    });
   }
 
   async function runIntroSequence() {
@@ -236,7 +279,7 @@
     await sleep(320);
 
     const vid = document.getElementById('intro-vid');
-    if (vid) { vid.currentTime = 0; vid.play().catch(() => {}); }
+    if (vid) { vid.currentTime = 0; vid.play().catch(() => { }); }
     runIntoSentences();
   }
 
@@ -296,10 +339,10 @@
   function clearIntroProducts() {
     spawnTimeouts.forEach(t => clearTimeout(t));
     spawnTimeouts = [];
-    introFloats.forEach(el => { 
-      el.style.transition = 'opacity 1s ease'; 
-      el.style.opacity = '0'; 
-      setTimeout(() => el.remove(), 1000); 
+    introFloats.forEach(el => {
+      // Use the 'fading' class from CSS which handles animation:none and transition:opacity
+      el.classList.add('fading');
+      setTimeout(() => el.remove(), 1200);
     });
     introFloats = [];
   }
@@ -364,6 +407,14 @@
   function exitIntro() {
     if (introExited) return; introExited = true;
     const vid = document.getElementById('intro-vid'); if (vid) vid.pause();
+    
+    // Fade out the entire products container
+    const prodBox = document.getElementById('intro-products');
+    if (prodBox) {
+      prodBox.style.transition = 'opacity 1s ease';
+      prodBox.style.opacity = '0';
+    }
+    
     clearIntroProducts();
     sessionStorage.setItem('choco_intro_done', '1');
 
@@ -629,7 +680,7 @@
         btn.innerHTML = 'جاري البحث...'; btn.disabled = true;
         const res = await fetch(`${CFG.apiUrl}?action=trackOrders&phone=${encodeURIComponent(phone)}`);
         const data = await res.json();
-        
+
         resultsDiv.style.display = 'block';
         if (data.status === 'success' && data.orders && data.orders.length > 0) {
           resultsDiv.innerHTML = data.orders.map(o => `
@@ -655,7 +706,7 @@
   // ═══════════════════════════════════════════
   let chatHistory = [];
   const chatSessionId = 'session_' + Math.random().toString(36).substring(2, 9);
-  
+
   function initChocoChat() {
     const floatBtn = document.getElementById('choco-float');
     const chatWin = document.getElementById('chat-window');
@@ -727,7 +778,7 @@
           const data = await res.json();
           reply = data?.candidates?.[0]?.content?.parts?.[0]?.text || 'عذراً، لم أستطع الرد.';
         }
-        
+
         chatHistory.push({ role: 'model', parts: [{ text: reply }] });
         saveChatToSheets('Choco AI', reply);
       } catch (err) {
@@ -741,14 +792,14 @@
 
     let botText = reply;
     let recommendedProducts = [];
-    
+
     // Extract [PRODUCT:ID] tags
     const regex = /\[PRODUCT:(\d+)\]/gi;
     let match;
     while ((match = regex.exec(botText)) !== null) {
       recommendedProducts.push(parseInt(match[1]));
     }
-    
+
     // Clean text
     botText = botText.replace(/\[PRODUCT:\d+\]/gi, '').trim();
 
@@ -789,7 +840,7 @@
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify({ action: 'saveChat', sessionId: chatSessionId, sender, message })
-    }).catch(() => {});
+    }).catch(() => { });
   }
 
   // ═══════════════════════════════════════════
@@ -846,7 +897,7 @@
     const search = document.querySelector('.search-container');
     const hero = document.querySelector('.hero');
     const header = document.querySelector('.header');
-    
+
     function moveSearch() {
       if (innerWidth <= 768) {
         if (search.parentNode !== hero && hero) {
@@ -866,7 +917,7 @@
         }
       }
     }
-    
+
     window.addEventListener('resize', moveSearch);
     moveSearch();
   }
