@@ -188,8 +188,13 @@
                     <div class="carousel-slide min-w-full h-full relative" data-slide="0">
                         <video id="carouselVideo" class="w-full h-full object-cover opacity-90" muted playsinline
                             poster="chocobox.png">
-                            <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+                            <source src="؟؟.mp4" type="video/mp4">
                         </video>
+                        <!-- Audio Toggle Button -->
+                        <button onclick="toggleVideoAudio(event)" id="videoAudioBtn" 
+                            class="absolute bottom-8 left-8 z-30 w-12 h-12 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white border border-white/30 cursor-pointer hover:bg-white/40 transition-all active:scale-90 shadow-lg">
+                            <span class="material-symbols-outlined text-2xl">volume_off</span>
+                        </button>
                         <div
                             class="absolute inset-0 bg-gradient-to-t from-inverse-surface/60 via-transparent to-transparent pointer-events-none">
                         </div>
@@ -1257,8 +1262,32 @@
                 });
                 clearInterval(carouselInterval);
             } else {
-                allVideos.forEach(v => v.pause());
+                allVideos.forEach(v => {
+                    v.pause();
+                    // Reset to beginning so it doesn't stay on a frame
+                    v.currentTime = 0;
+                });
                 startCarousel();
+            }
+        }
+
+        function toggleVideoAudio(e) {
+            if (e) e.stopPropagation();
+            const video = document.getElementById('carouselVideo');
+            const btn = document.getElementById('videoAudioBtn');
+            if (!video || !btn) return;
+            
+            const icon = btn.querySelector('.material-symbols-outlined');
+            if (video.muted) {
+                video.muted = false;
+                icon.textContent = 'volume_up';
+                btn.classList.add('bg-primary/40', 'text-white');
+                btn.classList.remove('bg-white/20');
+            } else {
+                video.muted = true;
+                icon.textContent = 'volume_off';
+                btn.classList.remove('bg-primary/40');
+                btn.classList.add('bg-white/20');
             }
         }
 
