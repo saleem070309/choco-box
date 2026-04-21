@@ -5,8 +5,12 @@
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>متجر الحلويات | ChocoBox</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    <link rel="icon" type="image/png" href="chocobox.png" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        rel="stylesheet" />
 
     <!-- Leaflet Maps -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -183,7 +187,7 @@
                     <!-- Slide 1: Video -->
                     <div class="carousel-slide min-w-full h-full relative" data-slide="0">
                         <video id="carouselVideo" class="w-full h-full object-cover opacity-90" muted playsinline
-                            poster="منشورات فيسبوك لي.png">
+                            poster="chocobox.png">
                             <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
                         </video>
                         <div
@@ -192,31 +196,34 @@
                     </div>
 
                     <!-- Slide 2: Best Seller -->
-                    <div class="carousel-slide min-w-full h-full cursor-pointer relative" onclick="navigateToProductByName('لوح شوكولاتة بالبستاشيو')"
-                        data-slide="1">
+                    <div class="carousel-slide min-w-full h-full cursor-pointer relative"
+                        onclick="navigateToProductByName('لوح شوكولاتة بالبستاشيو')" data-slide="1">
                         <img class="w-full h-full object-cover opacity-90" src="chocoBoard.png" alt="الأكثر مبيعاً" />
                         <div
                             class="absolute inset-0 bg-gradient-to-t from-inverse-surface/90 via-inverse-surface/20 to-transparent pointer-events-none">
                         </div>
-                        <div class="absolute bottom-0 right-0 p-8 text-inverse-on-surface text-right max-w-lg pointer-events-none">
+                        <div
+                            class="absolute bottom-0 right-0 p-8 text-inverse-on-surface text-right max-w-lg pointer-events-none">
                             <span
                                 class="inline-block px-4 py-1 rounded-full bg-primary text-on-primary text-xs font-bold tracking-widest mb-4">الأكثر
                                 مبيعاً</span>
                             <h2 class="text-3xl md:text-5xl font-black mb-4 leading-tight">لوح شوكولاتة بالبستاشيو</h2>
-                            <button onclick="event.stopPropagation(); navigateToProductByName('لوح شوكولاتة بالبستاشيو')"
+                            <button
+                                onclick="event.stopPropagation(); navigateToProductByName('لوح شوكولاتة بالبستاشيو')"
                                 class="bg-gradient-to-tl from-primary to-primary-container text-on-primary px-8 py-3 rounded-md font-bold transition-transform active:scale-95 shadow-ambient border-0 pointer-events-auto cursor-pointer">اكتشف
                                 الآن</button>
                         </div>
                     </div>
 
                     <!-- Slide 3: بوكس الورود -->
-                    <div class="carousel-slide min-w-full h-full cursor-pointer relative" onclick="navigateToProductByName('بوكس الورود')"
-                        data-slide="2">
+                    <div class="carousel-slide min-w-full h-full cursor-pointer relative"
+                        onclick="navigateToProductByName('بوكس الورود')" data-slide="2">
                         <img class="w-full h-full object-cover" src="منشورات فيسبوك لي (2).png" alt="بوكس الورود" />
                         <div
                             class="absolute inset-0 bg-gradient-to-t from-inverse-surface/80 via-transparent to-transparent pointer-events-none">
                         </div>
-                        <div class="absolute bottom-0 right-0 p-8 text-inverse-on-surface text-right max-w-lg pointer-events-none">
+                        <div
+                            class="absolute bottom-0 right-0 p-8 text-inverse-on-surface text-right max-w-lg pointer-events-none">
                             <span
                                 class="inline-block px-4 py-1 rounded-full bg-tertiary text-on-tertiary text-xs font-bold tracking-widest mb-4">جديد</span>
                             <h2 class="text-3xl md:text-5xl font-black mb-4 leading-tight">بوكس الورود</h2>
@@ -227,13 +234,14 @@
                     </div>
 
                     <!-- Slide 4: بوكس شوكولاتة -->
-                    <div class="carousel-slide min-w-full h-full cursor-pointer relative" onclick="navigateToProductByName('بوكس شوكولاتة')"
-                        data-slide="3">
+                    <div class="carousel-slide min-w-full h-full cursor-pointer relative"
+                        onclick="navigateToProductByName('بوكس شوكولاتة')" data-slide="3">
                         <img class="w-full h-full object-cover" src="منشورات فيسبوك لي.png" alt="بوكس شوكولاتة" />
                         <div
                             class="absolute inset-0 bg-gradient-to-t from-inverse-surface/80 via-transparent to-transparent pointer-events-none">
                         </div>
-                        <div class="absolute bottom-0 right-0 p-8 text-inverse-on-surface text-right max-w-lg pointer-events-none">
+                        <div
+                            class="absolute bottom-0 right-0 p-8 text-inverse-on-surface text-right max-w-lg pointer-events-none">
                             <span
                                 class="inline-block px-4 py-1 rounded-full bg-secondary text-on-secondary text-xs font-bold tracking-widest mb-4">مميز</span>
                             <h2 class="text-3xl md:text-5xl font-black mb-4 leading-tight">بوكس شوكولاتة</h2>
@@ -244,13 +252,15 @@
                     </div>
 
                     <!-- Slide 5: بوكس البيوض -->
-                    <div class="carousel-slide min-w-full h-full cursor-pointer relative" onclick="navigateToProductByName('بوكس البيوض')"
-                        data-slide="4">
-                        <img class="w-full h-full object-cover" src="a5483814-4967-4a6b-b615-2f8a801bd14d.jfif" alt="بوكس البيوض" />
+                    <div class="carousel-slide min-w-full h-full cursor-pointer relative"
+                        onclick="navigateToProductByName('بوكس البيوض')" data-slide="4">
+                        <img class="w-full h-full object-cover" src="a5483814-4967-4a6b-b615-2f8a801bd14d.jfif"
+                            alt="بوكس البيوض" />
                         <div
                             class="absolute inset-0 bg-gradient-to-t from-inverse-surface/80 via-transparent to-transparent pointer-events-none">
                         </div>
-                        <div class="absolute bottom-0 right-0 p-8 text-inverse-on-surface text-right max-w-lg pointer-events-none">
+                        <div
+                            class="absolute bottom-0 right-0 p-8 text-inverse-on-surface text-right max-w-lg pointer-events-none">
                             <span
                                 class="inline-block px-4 py-1 rounded-full bg-primary text-on-primary text-xs font-bold tracking-widest mb-4">حصري</span>
                             <h2 class="text-3xl md:text-5xl font-black mb-4 leading-tight">البوكس الذهبي والفضي</h2>
@@ -328,15 +338,20 @@
                     <!-- Brand -->
                     <div class="text-center space-y-4">
                         <h2 class="text-3xl font-black text-primary tracking-tighter">ChocoBox</h2>
-                        <p class="text-on-surface-variant font-medium leading-relaxed">نصنع لك السعادة في كل قطعة شوكولاتة. جودة فاخرة وطعم لا يُنسى.</p>
+                        <p class="text-on-surface-variant font-medium leading-relaxed">نصنع لك السعادة في كل قطعة
+                            شوكولاتة. جودة فاخرة وطعم لا يُنسى.</p>
                     </div>
 
                     <!-- Contact Us -->
                     <div class="space-y-6">
-                        <h3 class="text-sm font-bold text-on-surface uppercase tracking-widest text-center border-b border-surface-container-highest pb-3">تواصل معنا</h3>
+                        <h3
+                            class="text-sm font-bold text-on-surface uppercase tracking-widest text-center border-b border-surface-container-highest pb-3">
+                            تواصل معنا</h3>
                         <div class="grid grid-cols-1 gap-4">
-                            <a href="https://wa.me/962788144210" target="_blank" class="flex items-center gap-4 p-4 bg-surface rounded-2xl hover:bg-surface-container transition-colors no-underline">
-                                <div class="w-12 h-12 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366]">
+                            <a href="https://wa.me/962788144210" target="_blank"
+                                class="flex items-center gap-4 p-4 bg-surface rounded-2xl hover:bg-surface-container transition-colors no-underline">
+                                <div
+                                    class="w-12 h-12 rounded-full bg-[#25D366]/10 flex items-center justify-center text-[#25D366]">
                                     <span class="material-symbols-outlined">chat</span>
                                 </div>
                                 <div class="flex-1">
@@ -345,8 +360,10 @@
                                 </div>
                                 <span class="material-symbols-outlined text-on-surface-variant">open_in_new</span>
                             </a>
-                            <a href="https://web.facebook.com/profile.php?id=61583604596426" target="_blank" class="flex items-center gap-4 p-4 bg-surface rounded-2xl hover:bg-surface-container transition-colors no-underline">
-                                <div class="w-12 h-12 rounded-full bg-[#1877F2]/10 flex items-center justify-center text-[#1877F2]">
+                            <a href="https://web.facebook.com/profile.php?id=61583604596426" target="_blank"
+                                class="flex items-center gap-4 p-4 bg-surface rounded-2xl hover:bg-surface-container transition-colors no-underline">
+                                <div
+                                    class="w-12 h-12 rounded-full bg-[#1877F2]/10 flex items-center justify-center text-[#1877F2]">
                                     <span class="material-symbols-outlined">share</span>
                                 </div>
                                 <div class="flex-1">
@@ -361,10 +378,15 @@
                     <!-- Useful Links -->
                     <div class="flex flex-col items-center gap-4 pt-6 border-t border-surface-container-highest">
                         <div class="flex gap-6">
-                            <button onclick="navigate('page_10')" class="text-sm font-bold text-on-surface-variant hover:text-primary transition-colors border-0 bg-transparent cursor-pointer">سياسات الخدمة</button>
-                            <button onclick="navigate('page_11')" class="text-sm font-bold text-on-surface-variant hover:text-primary transition-colors border-0 bg-transparent cursor-pointer">شروط الاستخدام</button>
+                            <button onclick="navigate('page_10')"
+                                class="text-sm font-bold text-on-surface-variant hover:text-primary transition-colors border-0 bg-transparent cursor-pointer">سياسات
+                                الخدمة</button>
+                            <button onclick="navigate('page_11')"
+                                class="text-sm font-bold text-on-surface-variant hover:text-primary transition-colors border-0 bg-transparent cursor-pointer">شروط
+                                الاستخدام</button>
                         </div>
-                        <p class="text-[10px] text-on-surface-variant/60 font-medium">© 2024 ChocoBox JS. جميع الحقوق محفوظة.</p>
+                        <p class="text-[10px] text-on-surface-variant/60 font-medium">© 2024 ChocoBox JS. جميع الحقوق
+                            محفوظة.</p>
                     </div>
                 </div>
             </footer>
@@ -462,18 +484,31 @@
 
                 </div>
                 <div class="lg:col-start-3">
-                    <div class="bg-surface-container-low rounded-xl p-6 sticky top-28 shadow-none border-0">
+                        <!-- Automatic Region Detection -->
+                        <div class="bg-surface-container rounded-2xl p-6 mb-6">
+                            <div class="flex items-start gap-4">
+                                <div class="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                                    <span class="material-symbols-outlined">local_shipping</span>
+                                </div>
+                                <div class="flex-1">
+                                    <h3 class="text-sm font-black text-on-surface mb-1" id="delivery-info-title">تحديد سعر التوصيل</h3>
+                                    <p class="text-xs font-medium text-on-surface-variant leading-relaxed" id="delivery-info-desc">يتم تحديد السعر تلقائياً بناءً على موقعك. (الرمثا: 1 د.أ، الخارج: 3 د.أ)</p>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" id="detected-region" value="pending">
+
                         <h3 class="text-xl font-bold mb-6 text-on-surface">ملخص الطلب</h3>
                         <div class="space-y-4 mb-6">
-                            <div class="flex justify-between text-on-surface-variant">
+                            <div class="flex justify-between text-on-surface-variant font-medium">
                                 <span>المجموع</span>
-                                <span id="cart-subtotal">0.00 د.أ</span>
+                                <span id="cart-subtotal" class="font-bold">0.00 د.أ</span>
                             </div>
-                            <div class="flex justify-between text-on-surface-variant">
+                            <div class="flex justify-between text-on-surface-variant font-medium">
                                 <span>التوصيل</span>
-                                <span id="cart-delivery">0.00 د.أ</span>
+                                <span id="cart-delivery" class="font-bold">0.00 د.أ</span>
                             </div>
-                            <div class="pt-4 border-t border-outline-variant/20 flex justify-between items-center">
+                            <div class="pt-4 border-t border-outline-variant/30 flex justify-between items-center">
                                 <span class="text-lg font-bold text-on-surface">الإجمالي</span>
                                 <span id="cart-total" class="text-2xl font-black text-primary">0.00 د.أ</span>
                             </div>
@@ -607,7 +642,8 @@
                     <div class="mt-8 px-2">
                         <div class="relative flex items-center justify-between">
                             <div class="absolute top-4 left-0 right-0 h-0.5 bg-surface-container-highest"></div>
-                            <div id="track-progress-bar" class="absolute top-4 right-0 h-0.5 bg-primary transition-all duration-500"
+                            <div id="track-progress-bar"
+                                class="absolute top-4 right-0 h-0.5 bg-primary transition-all duration-500"
                                 style="width: 0%;"></div>
                             <div class="relative flex flex-col items-center group" id="step-received">
                                 <div
@@ -635,14 +671,16 @@
                                     class="w-8 h-8 rounded-full bg-surface-container-highest text-on-surface-variant flex items-center justify-center z-10 shadow-none">
                                     <span class="material-symbols-outlined text-sm">home</span>
                                 </div>
-                                <span class="text-[10px] mt-1.5 font-medium text-on-surface-variant/50">تم التوصيل</span>
+                                <span class="text-[10px] mt-1.5 font-medium text-on-surface-variant/50">تم
+                                    التوصيل</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- الخريطة (تظهر فقط في حالة "في الطريق") -->
-                <section id="track-map-section" style="display:none;" class="bg-surface-container-low rounded-xl overflow-hidden shadow-none border-0">
+                <section id="track-map-section" style="display:none;"
+                    class="bg-surface-container-low rounded-xl overflow-hidden shadow-none border-0">
                     <div id="trackingMap" style="height: 250px; width: 100%; z-index: 1;"></div>
                 </section>
 
@@ -656,9 +694,12 @@
                     </div>
                 </div>
 
+                <!-- زر إلغاء (يظهر برمجياً) -->
+                <div id="cancel-order-container" style="display:none;"></div>
+
                 <!-- زر تحديث -->
                 <button onclick="refreshTracking()"
-                    class="w-full bg-surface-container text-on-surface-variant py-3 rounded-xl font-bold text-sm hover:bg-surface-container-high transition-all active:scale-95 shadow-none cursor-pointer border-0 flex items-center justify-center gap-2">
+                    class="w-full bg-surface-container text-on-surface-variant py-3 rounded-xl font-bold text-sm hover:bg-surface-container-high transition-all active:scale-95 shadow-none cursor-pointer border-0 flex items-center justify-center gap-2 mt-4">
                     <span class="material-symbols-outlined text-lg">refresh</span>
                     تحديث الحالة
                 </button>
@@ -701,7 +742,8 @@
             <!-- قسم تسجيل الدخول (يظهر إذا لم يسجل) -->
             <section id="profile-login-section" class="mb-8">
                 <div class="bg-surface-container-low rounded-2xl p-8 text-center">
-                    <div class="w-20 h-20 rounded-full bg-primary-container flex items-center justify-center mx-auto mb-4">
+                    <div
+                        class="w-20 h-20 rounded-full bg-primary-container flex items-center justify-center mx-auto mb-4">
                         <span class="material-symbols-outlined text-4xl text-on-primary-container">person</span>
                     </div>
                     <h2 class="text-xl font-bold text-on-surface mb-2">مرحباً بك!</h2>
@@ -728,7 +770,8 @@
                         <span class="text-4xl font-black text-on-primary-container" id="profile-avatar">CB</span>
                     </div>
                     <div class="text-center">
-                        <h2 class="text-2xl font-extrabold tracking-tight text-on-surface mb-1" id="profile-display-name">—</h2>
+                        <h2 class="text-2xl font-extrabold tracking-tight text-on-surface mb-1"
+                            id="profile-display-name">—</h2>
                         <p class="text-on-surface-variant font-medium flex items-center justify-center gap-1">
                             <span class="material-symbols-outlined text-sm">phone</span>
                             <span id="profile-display-phone">—</span>
@@ -746,11 +789,12 @@
                         class="w-full rounded-xl bg-surface border-0 p-4 focus:ring-2 focus:ring-primary text-on-surface font-semibold mb-3"
                         placeholder="الاسم">
                     <input type="tel" id="profile-edit-phone"
-                        class="w-full rounded-xl bg-surface border-0 p-4 focus:ring-2 focus:ring-primary text-on-surface font-semibold mb-3 text-left" dir="ltr"
-                        placeholder="رقم الهاتف">
+                        class="w-full rounded-xl bg-surface border-0 p-4 focus:ring-2 focus:ring-primary text-on-surface font-semibold mb-3 text-left"
+                        dir="ltr" placeholder="رقم الهاتف">
                     <div class="flex gap-2">
                         <button onclick="saveProfileEdit()"
-                            class="flex-1 bg-primary text-on-primary py-3 rounded-xl font-bold border-0 cursor-pointer"> حفظ</button>
+                            class="flex-1 bg-primary text-on-primary py-3 rounded-xl font-bold border-0 cursor-pointer">
+                            حفظ</button>
                         <button onclick="document.getElementById('profile-edit-form').style.display='none'"
                             class="px-4 bg-surface-container text-on-surface-variant py-3 rounded-xl font-bold border-0 cursor-pointer">إلغاء</button>
                     </div>
@@ -762,8 +806,10 @@
                     <button onclick="navigate('page_6')"
                         class="w-full border-0 flex items-center justify-between p-4 bg-surface-container-low hover:bg-surface-container transition-colors rounded-xl group cursor-pointer shadow-none">
                         <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 flex items-center justify-center rounded-full bg-tertiary-container/20 text-tertiary">
-                                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">favorite</span>
+                            <div
+                                class="w-10 h-10 flex items-center justify-center rounded-full bg-tertiary-container/20 text-tertiary">
+                                <span class="material-symbols-outlined"
+                                    style="font-variation-settings: 'FILL' 1;">favorite</span>
                             </div>
                             <span class="font-bold text-on-surface">المفضلة</span>
                         </div>
@@ -772,7 +818,8 @@
                     <button onclick="navigate('page_10')"
                         class="w-full border-0 flex items-center justify-between p-4 bg-surface-container-low hover:bg-surface-container transition-colors rounded-xl group cursor-pointer shadow-none">
                         <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 flex items-center justify-center rounded-full bg-primary-container/20 text-primary">
+                            <div
+                                class="w-10 h-10 flex items-center justify-center rounded-full bg-primary-container/20 text-primary">
                                 <span class="material-symbols-outlined">policy</span>
                             </div>
                             <span class="font-bold text-on-surface">سياسات الخدمة</span>
@@ -782,7 +829,8 @@
                     <button onclick="navigate('page_11')"
                         class="w-full border-0 flex items-center justify-between p-4 bg-surface-container-low hover:bg-surface-container transition-colors rounded-xl group cursor-pointer shadow-none">
                         <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 flex items-center justify-center rounded-full bg-secondary-container/20 text-secondary">
+                            <div
+                                class="w-10 h-10 flex items-center justify-center rounded-full bg-secondary-container/20 text-secondary">
                                 <span class="material-symbols-outlined">gavel</span>
                             </div>
                             <span class="font-bold text-on-surface">شروط الاستخدام</span>
@@ -792,7 +840,8 @@
                     <button onclick="logoutProfile()"
                         class="w-full border-0 flex items-center justify-between p-4 bg-surface-container-low hover:bg-error-container transition-colors rounded-xl group cursor-pointer shadow-none">
                         <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 flex items-center justify-center rounded-full bg-error-container text-on-error-container">
+                            <div
+                                class="w-10 h-10 flex items-center justify-center rounded-full bg-error-container text-on-error-container">
                                 <span class="material-symbols-outlined">logout</span>
                             </div>
                             <span class="font-bold text-on-surface">تسجيل خروج</span>
@@ -803,7 +852,8 @@
 
                 <!-- طلباتي -->
                 <section>
-                    <h3 class="text-sm font-bold text-on-surface-variant uppercase tracking-widest px-2 mb-4">طلباتي</h3>
+                    <h3 class="text-sm font-bold text-on-surface-variant uppercase tracking-widest px-2 mb-4">طلباتي
+                    </h3>
                     <div id="my-orders-list" class="space-y-3">
                         <p class="text-center text-on-surface-variant py-8">جاري التحميل...</p>
                     </div>
@@ -905,7 +955,8 @@
     <div id="page_10" class="app-page" style="display:none; width: 100%; height: 100%;">
         <header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl shadow-ambient">
             <div class="flex items-center gap-4 px-6 h-16 max-w-2xl mx-auto">
-                <button onclick="goBack()" class="border-0 bg-transparent text-primary cursor-pointer active:scale-95 transition-transform">
+                <button onclick="goBack()"
+                    class="border-0 bg-transparent text-primary cursor-pointer active:scale-95 transition-transform">
                     <span class="material-symbols-outlined">arrow_forward</span>
                 </button>
                 <h1 class="font-bold text-lg text-on-surface">سياسات الخدمة</h1>
@@ -918,23 +969,26 @@
                     <span class="material-symbols-outlined">local_shipping</span>
                     <h2 class="text-xl font-black">سياسة الطلب والتوصيل</h2>
                 </div>
-                <p class="text-on-surface-variant leading-relaxed text-sm">نحن في ChocoBox نسعى لتوفير أفضل تجربة لكم. يتم معالجة الطلبات خلال 24 ساعة من تأكيد الطلب.</p>
+                <p class="text-on-surface-variant leading-relaxed text-sm">نحن في ChocoBox نسعى لتوفير أفضل تجربة لكم.
+                    يتم معالجة الطلبات خلال 24 ساعة من تأكيد الطلب.</p>
                 <ul class="list-disc list-inside text-on-surface-variant space-y-3 text-sm">
                     <li>التوصيل داخل عمان يتم خلال 24-48 ساعة.</li>
-                    <li>رسوم التوصيل ثابتة (2 د.أ) ومجانية للطلبات فوق 50 د.أ.</li>
+                    <li>رسوم التوصيل: داخل الرمثا (1 د.أ) وباقي مناطق الأردن (3 د.أ)، ومجانية للطلبات فوق 50 د.أ.</li>
                     <li>يرجى التأكد من دقة العنوان ورقم الهاتف لضمان وصول الطلب في الوقت المحدد.</li>
                 </ul>
             </section>
-            
+
             <section class="bg-surface-container-low rounded-2xl p-6 space-y-4">
                 <div class="flex items-center gap-3 text-primary mb-2">
                     <span class="material-symbols-outlined">assignment_return</span>
                     <h2 class="text-xl font-black">سياسة الإلغاء والتبديل</h2>
                 </div>
-                <p class="text-on-surface-variant leading-relaxed text-sm">بما أن منتجاتنا غذائية وحساسة، فإننا نتبع السياسات التالية:</p>
+                <p class="text-on-surface-variant leading-relaxed text-sm">بما أن منتجاتنا غذائية وحساسة، فإننا نتبع
+                    السياسات التالية:</p>
                 <ul class="list-disc list-inside text-on-surface-variant space-y-3 text-sm">
                     <li>يمكن إلغاء الطلب فقط قبل بدء عملية التحضير.</li>
-                    <li>لا يتم استبدال أو استرجاع المنتجات إلا في حال وجود خطأ في الطلب أو عيب مصنعي واضح عند الاستلام.</li>
+                    <li>لا يتم استبدال أو استرجاع المنتجات إلا في حال وجود خطأ في الطلب أو عيب مصنعي واضح عند الاستلام.
+                    </li>
                     <li>في حال العثور على أي مشكلة، يرجى التواصل معنا فوراً عبر الواتساب مع صورة المنتج.</li>
                 </ul>
             </section>
@@ -945,7 +999,8 @@
     <div id="page_11" class="app-page" style="display:none; width: 100%; height: 100%;">
         <header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl shadow-ambient">
             <div class="flex items-center gap-4 px-6 h-16 max-w-2xl mx-auto">
-                <button onclick="goBack()" class="border-0 bg-transparent text-primary cursor-pointer active:scale-95 transition-transform">
+                <button onclick="goBack()"
+                    class="border-0 bg-transparent text-primary cursor-pointer active:scale-95 transition-transform">
                     <span class="material-symbols-outlined">arrow_forward</span>
                 </button>
                 <h1 class="font-bold text-lg text-on-surface">شروط الاستخدام</h1>
@@ -954,16 +1009,21 @@
         </header>
         <main class="pt-24 pb-32 px-6 max-w-2xl mx-auto space-y-8">
             <section class="space-y-4">
-                <h2 class="text-xl font-black text-primary border-b border-surface-container-highest pb-2">شرط الأهلية</h2>
-                <p class="text-on-surface-variant leading-relaxed">باستخدامك لموقع ChocoBox، أنت تقر بأنك تبلغ من العمر 18 عاماً على الأقل أو تستخدم الموقع تحت إشراف ولي الأمر.</p>
+                <h2 class="text-xl font-black text-primary border-b border-surface-container-highest pb-2">شرط الأهلية
+                </h2>
+                <p class="text-on-surface-variant leading-relaxed">باستخدامك لموقع ChocoBox، أنت تقر بأنك تبلغ من العمر
+                    18 عاماً على الأقل أو تستخدم الموقع تحت إشراف ولي الأمر.</p>
             </section>
             <section class="space-y-4">
-                <h2 class="text-xl font-black text-primary border-b border-surface-container-highest pb-2">دقة المعلومات</h2>
-                <p class="text-on-surface-variant leading-relaxed">يتحمل العميل مسؤولية تزويدنا بمعلومات صحيحة (الاسم، الهاتف، العنوان). أي تأخير ناتج عن معلومات خاطئة يقع على عاتق العميل.</p>
+                <h2 class="text-xl font-black text-primary border-b border-surface-container-highest pb-2">دقة المعلومات
+                </h2>
+                <p class="text-on-surface-variant leading-relaxed">يتحمل العميل مسؤولية تزويدنا بمعلومات صحيحة (الاسم،
+                    الهاتف، العنوان). أي تأخير ناتج عن معلومات خاطئة يقع على عاتق العميل.</p>
             </section>
             <section class="space-y-4">
                 <h2 class="text-xl font-black text-primary border-b border-surface-container-highest pb-2">الخصوصية</h2>
-                <p class="text-on-surface-variant leading-relaxed">نحن نحترم خصوصيتك. يتم استخدام بياناتك فقط لغرض معالجة طلباتك وتحسين خدمتنا، ولا يتم مشاركتها مع أي أطراف ثالثة لأغراض تسويقية دون موافقتك.</p>
+                <p class="text-on-surface-variant leading-relaxed">نحن نحترم خصوصيتك. يتم استخدام بياناتك فقط لغرض
+                    معالجة طلباتك وتحسين خدمتنا، ولا يتم مشاركتها مع أي أطراف ثالثة لأغراض تسويقية دون موافقتك.</p>
             </section>
         </main>
     </div>
@@ -1051,27 +1111,38 @@
                             على الخريطة
                         </button>
                     </div>
-                    
-                    <div id="checkout-map-container" class="hidden w-full h-[250px] rounded-xl overflow-hidden mb-3 relative border-2 border-primary/20">
+
+                    <div id="checkout-map-container"
+                        class="hidden w-full h-[250px] rounded-xl overflow-hidden mb-3 relative border-2 border-primary/20">
                         <div id="checkoutSelectionMap" class="w-full h-full z-10"></div>
-                        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-full pointer-events-none z-20 pb-1">
-                            <span class="material-symbols-outlined text-primary text-[40px]" style="font-variation-settings: 'FILL' 1;">location_on</span>
+                        <div
+                            class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-full pointer-events-none z-20 pb-1">
+                            <span class="material-symbols-outlined text-primary text-[40px]"
+                                style="font-variation-settings: 'FILL' 1;">location_on</span>
                         </div>
-                        <button onclick="confirmMapSelection()" type="button" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-primary text-on-primary px-6 py-2 rounded-full font-bold z-30 shadow-ambient border-0 cursor-pointer">
+                        <button onclick="confirmMapSelection()" type="button"
+                            class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-primary text-on-primary px-6 py-2 rounded-full font-bold z-30 shadow-ambient border-0 cursor-pointer">
                             تأكيد الموقع
                         </button>
                     </div>
 
-                    <div id="checkout-address-box" class="hidden bg-surface-container-low p-4 rounded-xl border border-outline-variant/30 flex items-start gap-3">
-                        <span class="material-symbols-outlined text-primary mt-0.5" style="font-variation-settings: 'FILL' 1;">location_on</span>
+                    <div id="checkout-address-box"
+                        class="hidden bg-surface-container-low p-4 rounded-xl border border-outline-variant/30 flex items-start gap-3">
+                        <span class="material-symbols-outlined text-primary mt-0.5"
+                            style="font-variation-settings: 'FILL' 1;">location_on</span>
                         <div class="flex-1">
                             <p id="checkout-address-text" class="text-sm font-bold text-on-surface mb-1">...</p>
-                            <button onclick="document.getElementById('checkout-address').classList.remove('hidden')" type="button" class="text-xs text-primary underline border-0 bg-transparent cursor-pointer p-0 font-bold mt-1">تعديل التفاصيل المكتوبة (رقم الشقة، البناية)</button>
+                            <button onclick="document.getElementById('checkout-address').classList.remove('hidden')"
+                                type="button"
+                                class="text-xs text-primary underline border-0 bg-transparent cursor-pointer p-0 font-bold mt-1">تعديل
+                                التفاصيل المكتوبة (رقم الشقة، البناية)</button>
                         </div>
                     </div>
-                    
-                    <textarea id="checkout-address" class="hidden mt-3 w-full rounded-xl bg-surface border border-outline-variant/30 p-3 min-h-[60px] focus:ring-2 focus:ring-primary text-on-surface font-semibold text-sm" placeholder="تفاصيل العنوان (رقم البناية، الشقة...)"></textarea>
-                    
+
+                    <textarea id="checkout-address"
+                        class="hidden mt-3 w-full rounded-xl bg-surface border border-outline-variant/30 p-3 min-h-[60px] focus:ring-2 focus:ring-primary text-on-surface font-semibold text-sm"
+                        placeholder="تفاصيل العنوان (رقم البناية، الشقة...)"></textarea>
+
                     <input type="hidden" id="checkout-latlng" value="">
                     <!-- Preserve hidden element for compatibility -->
                     <input type="hidden" id="checkout-gov" value="">
@@ -1084,9 +1155,9 @@
                 </div>
             </div>
 
-            <button onclick="submitCheckout()"
-                class="w-full mt-8 border-0 bg-gradient-to-br from-primary-container to-primary text-on-primary py-4 rounded-xl font-bold text-lg hover:opacity-90 transition-all active:scale-95 shadow-none cursor-pointer">
-                إتمام الطلب
+            <button onclick="submitCheckout()" id="submit-checkout-btn"
+                class="w-full mt-8 border-0 bg-gradient-to-br from-primary-container to-primary text-on-primary py-4 rounded-xl font-bold text-lg hover:opacity-90 transition-all active:scale-95 shadow-none cursor-pointer flex items-center justify-center gap-2">
+                <span>إتمام الطلب</span>
             </button>
         </div>
     </div>
@@ -1102,7 +1173,7 @@
 
         function initCarouselDOM() {
             const wrap = document.getElementById('carouselWrapper');
-            if(!wrap) return;
+            if (!wrap) return;
             const originalSlides = wrap.querySelectorAll('.carousel-slide');
             if (originalSlides.length === 5) {
                 const clone = originalSlides[0].cloneNode(true);
@@ -1176,9 +1247,9 @@
                 allVideos.forEach(v => {
                     v.currentTime = 0;
                     let p = v.play();
-                    if(p !== undefined) p.catch(()=>{});
+                    if (p !== undefined) p.catch(() => { });
                     v.onended = () => {
-                        if(v.id === 'carouselVideo') {
+                        if (v.id === 'carouselVideo') {
                             nextSlide();
                             startCarousel();
                         }
@@ -1215,7 +1286,7 @@
                 isDragging = true;
                 clearInterval(carouselInterval);
                 wrapper.style.transition = 'none';
-            }, {passive: true});
+            }, { passive: true });
 
             carousel.addEventListener('touchmove', (e) => {
                 if (!isDragging || isTransitioning) return;
@@ -1223,7 +1294,7 @@
                 const diff = currentX - startX;
                 const percentMove = (diff / carousel.offsetWidth) * 100;
                 wrapper.style.transform = `translateX(${(currentSlide * 100) + percentMove}%)`;
-            }, {passive: true});
+            }, { passive: true });
 
             carousel.addEventListener('touchend', (e) => {
                 if (!isDragging) return;
@@ -1270,23 +1341,42 @@
         }
 
         async function submitCheckout() {
-            const name = document.getElementById('checkout-name').value;
-            const phone = document.getElementById('checkout-phone').value;
-            const address = document.getElementById('checkout-address').value;
+            const name = document.getElementById('checkout-name').value.trim();
+            const phone = document.getElementById('checkout-phone').value.trim();
+            const address = document.getElementById('checkout-address').value.trim();
+            const btn = document.getElementById('submit-checkout-btn');
 
             if (!name || !phone || !address) {
                 showToast('الرجاء إدخال الاسم ورقم الهاتف وتحديد الموقع');
                 return;
             }
 
-            closeCheckoutModal();
-            
-            // Send to Google Sheets
-            const success = await submitOrderToSheet();
-            if (success) {
-                cart = [];
-                saveCart();
-                navigate('page_5');
+            // Show loading state
+            const originalContent = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-xl">progress_activity</span> جارٍ إرسال طلبك...';
+            btn.classList.add('opacity-70', 'cursor-not-allowed');
+
+            try {
+                // Send to Google Sheets
+                const success = await submitOrderToSheet();
+                if (success) {
+                    cart = [];
+                    saveCart();
+                    closeCheckoutModal();
+                    navigate('page_5');
+                } else {
+                    // Re-enable if failed
+                    btn.disabled = false;
+                    btn.innerHTML = originalContent;
+                    btn.classList.remove('opacity-70', 'cursor-not-allowed');
+                }
+            } catch (err) {
+                console.error('Checkout error:', err);
+                showToast('حدث خطأ غير متوقع');
+                btn.disabled = false;
+                btn.innerHTML = originalContent;
+                btn.classList.remove('opacity-70', 'cursor-not-allowed');
             }
         }
     </script>
@@ -1296,4 +1386,3 @@
 </body>
 
 </html>
-

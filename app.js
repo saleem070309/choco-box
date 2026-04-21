@@ -23,7 +23,7 @@ let currentPage = 'page_0';
 function getDriveImageUrl(url) {
     if (!url) return 'ball.png'; // fallback
     const trimmed = url.trim();
-    
+
     // Handle format: https://drive.google.com/file/d/FILE_ID/view...
     const match = trimmed.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
     if (match) {
@@ -284,7 +284,7 @@ function renderFavorites() {
 }
 
 // Product detail page — fully dynamic
-let selectedFilling = null; // Changed from selectedFlavors (array) to selectedFilling (single)
+let selectedFillings = []; // Changed back to array to support both multi-selection and price-changing systems
 
 function populateProductDetail(id) {
     const p = allProducts.find(x => x.id === id);
@@ -295,28 +295,35 @@ function populateProductDetail(id) {
     if (!detailContainer) return;
 
     const isFav = isFavorite(p.id);
-    selectedFilling = null;
+    selectedFillings = [];
 
-    // Build filling selector HTML (Single choice)
+    // Determine selection system
+    // Heuristic: If any filling has a price > 0, it's System B (Single choice, price changes)
+    // Otherwise, it's System A (Multi-selection)
+    const hasPrices = p.fillings && p.fillings.some(f => f.includes('=') && parseFloat(f.split('=')[1]) > 0);
+    const isMulti = !hasPrices;
+
+    // Build filling selector HTML
     let fillingHTML = '';
     if (p.fillings && p.fillings.length > 0) {
         fillingHTML = `
             <div class="flex flex-col gap-2">
-                <span class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">الحشوة (اختر واحدة):</span>
+                <span class="text-xs font-bold text-on-surface-variant uppercase tracking-widest" id="filling-label">
+                    ${isMulti ? 'الحشوات (يمكنك اختيار أكثر من واحدة):' : 'الحشوة (اختر واحدة):'}
+                </span>
                 <div class="flex flex-wrap gap-2" id="filling-selector">
                     ${p.fillings.map((fStr, i) => {
-                        // Parse "FillingName=Price" (e.g., "فستق=0.5")
-                        const parts = fStr.split('=');
-                        const name = parts[0];
-                        const additionalPrice = parts[1] ? parseFloat(parts[1]) : 0;
-                        const priceLabel = additionalPrice > 0 ? ` (+${additionalPrice} د.أ)` : '';
-                        
-                        return `
-                            <button onclick="selectFilling('${name}', ${additionalPrice}, this)" 
+            const parts = fStr.split('=');
+            const name = parts[0];
+            const additionalPrice = parts[1] ? parseFloat(parts[1]) : 0;
+            const priceLabel = additionalPrice > 0 ? ` (+${additionalPrice} د.أ)` : '';
+
+            return `
+                            <button onclick="selectFilling('${name}', ${additionalPrice}, this, ${isMulti})" 
                                 class="filling-btn px-4 py-2.5 rounded-xl text-sm font-bold border-2 cursor-pointer transition-all duration-200 bg-surface-container-low text-on-surface-variant border-surface-container-highest hover:border-primary/50"
                             >${name}${priceLabel}</button>
                         `;
-                    }).join('')}
+        }).join('')}
                 </div>
             </div>
         `;
@@ -360,21 +367,36 @@ function populateProductDetail(id) {
     `;
 }
 
-function selectFilling(name, addPrice, btnEl) {
-    selectedFilling = { name, addPrice };
-    
-    // Reset all buttons
-    document.querySelectorAll('.filling-btn').forEach(btn => {
-        btn.className = 'filling-btn px-4 py-2.5 rounded-xl text-sm font-bold border-2 cursor-pointer transition-all duration-200 bg-surface-container-low text-on-surface-variant border-surface-container-highest hover:border-primary/50';
-    });
-    
-    // Highlight selected
-    btnEl.className = 'filling-btn px-4 py-2.5 rounded-xl text-sm font-bold border-2 cursor-pointer transition-all duration-200 bg-primary text-on-primary border-primary shadow-md scale-105';
-    
-    // Update price display if needed (optional)
+function selectFilling(name, addPrice, btnEl, isMulti) {
+    if (isMulti) {
+        const index = selectedFillings.findIndex(f => f.name === name);
+        if (index > -1) {
+            // Deselect
+            selectedFillings.splice(index, 1);
+            btnEl.className = 'filling-btn px-4 py-2.5 rounded-xl text-sm font-bold border-2 cursor-pointer transition-all duration-200 bg-surface-container-low text-on-surface-variant border-surface-container-highest hover:border-primary/50';
+        } else {
+            // Select
+            selectedFillings.push({ name, addPrice });
+            btnEl.className = 'filling-btn px-4 py-2.5 rounded-xl text-sm font-bold border-2 cursor-pointer transition-all duration-200 bg-primary text-on-primary border-primary shadow-md scale-105';
+        }
+    } else {
+        // Single choice
+        selectedFillings = [{ name, addPrice }];
+
+        // Reset all buttons
+        document.querySelectorAll('.filling-btn').forEach(btn => {
+            btn.className = 'filling-btn px-4 py-2.5 rounded-xl text-sm font-bold border-2 cursor-pointer transition-all duration-200 bg-surface-container-low text-on-surface-variant border-surface-container-highest hover:border-primary/50';
+        });
+
+        // Highlight selected
+        btnEl.className = 'filling-btn px-4 py-2.5 rounded-xl text-sm font-bold border-2 cursor-pointer transition-all duration-200 bg-primary text-on-primary border-primary shadow-md scale-105';
+    }
+
+    // Update price display
     const product = allProducts.find(p => p.id === history.state.productId);
     if (product) {
-        const total = product.price + addPrice;
+        const totalAdditional = selectedFillings.reduce((sum, f) => sum + f.addPrice, 0);
+        const total = product.price + totalAdditional;
         const priceEl = document.getElementById('current-detail-price');
         if (priceEl) {
             priceEl.textContent = `${total.toFixed(2)} د.أ${product.unit ? ' / ' + product.unit : ''}`;
@@ -384,15 +406,15 @@ function selectFilling(name, addPrice, btnEl) {
 
 function addToCartWithFilling(productId) {
     const p = allProducts.find(x => x.id === productId);
-    if (p.fillings && p.fillings.length > 0 && !selectedFilling) {
+    if (p.fillings && p.fillings.length > 0 && selectedFillings.length === 0) {
         showToast('يرجى اختيار الحشوة أولاً');
         return;
     }
-    
-    const fillingName = selectedFilling ? selectedFilling.name : '';
-    const fillingPrice = selectedFilling ? selectedFilling.addPrice : 0;
-    
-    addToCartById(productId, fillingName, fillingPrice);
+
+    const fillingNames = selectedFillings.map(f => f.name).join('، ');
+    const totalFillingPrice = selectedFillings.reduce((sum, f) => sum + f.addPrice, 0);
+
+    addToCartById(productId, fillingNames, totalFillingPrice);
 }
 
 // ── Interactions ──
@@ -403,16 +425,16 @@ function addToCartById(id, fillingName = '', fillingPrice = 0) {
 
     const cartKey = fillingName ? `${id}_${fillingName}` : id;
     const existing = cart.find(item => item.cartKey === cartKey);
-    
+
     if (existing) {
         existing.qty += 1;
     } else {
-        cart.push({ 
-            ...p, 
-            qty: 1, 
-            filling: fillingName, 
+        cart.push({
+            ...p,
+            qty: 1,
+            filling: fillingName,
             fillingPrice: fillingPrice,
-            cartKey: cartKey 
+            cartKey: cartKey
         });
     }
     saveCart();
@@ -544,8 +566,23 @@ function renderCart() {
         `;
     }).join('');
 
-    const delivery = subtotal >= 50 ? 0 : 2;
+    const regionInput = document.getElementById('detected-region');
+    const region = regionInput ? regionInput.value : 'pending';
+    
+    if (region === 'pending') {
+        if (subtotalEl) subtotalEl.textContent = `${subtotal.toFixed(2)} د.أ`;
+        if (deliveryEl) {
+            deliveryEl.textContent = subtotal >= 50 ? 'مجاني ✨' : 'يُكتشف تلقائياً';
+            deliveryEl.className = 'font-bold text-primary/60';
+        }
+        if (totalEl) totalEl.textContent = subtotal >= 50 ? `${subtotal.toFixed(2)} د.أ` : `جاري الحساب...`;
+        return;
+    }
+
+    const baseDelivery = region === 'ramtha' ? 1 : 3;
+    const delivery = subtotal >= 50 ? 0 : baseDelivery;
     const total = subtotal + delivery;
+
     if (subtotalEl) subtotalEl.textContent = `${subtotal.toFixed(2)} د.أ`;
     if (deliveryEl) {
         deliveryEl.textContent = subtotal >= 50 ? 'مجاني ✨' : `${delivery.toFixed(2)} د.أ`;
@@ -621,9 +658,9 @@ function loginProfile() {
         showToast('أدخل الاسم ورقم الهاتف');
         return;
     }
-    
+
     const dbPhone = formatPhoneForDB(phoneRaw);
-    
+
     // Save locally
     localStorage.setItem('chocobox_user_name', name);
     localStorage.setItem('chocobox_user_phone', dbPhone);
@@ -633,7 +670,7 @@ function loginProfile() {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain' },
         body: JSON.stringify({ action: 'saveCustomer', phone: dbPhone, name })
-    }).catch(() => {});
+    }).catch(() => { });
 
     showToast('تم التسجيل بنجاح!');
     loadProfile();
@@ -672,7 +709,7 @@ function loadProfile() {
 function showEditProfile() {
     const name = localStorage.getItem('chocobox_user_name') || '';
     const phoneStr = localStorage.getItem('chocobox_user_phone') || '';
-    
+
     document.getElementById('profile-edit-name').value = name;
     const phoneInput = document.getElementById('profile-edit-phone');
     if (phoneInput) {
@@ -690,9 +727,9 @@ function saveProfileEdit() {
         showToast('أدخل الاسم ورقم الهاتف');
         return;
     }
-    
+
     const newDbPhone = formatPhoneForDB(newPhoneRaw);
-    
+
     localStorage.setItem('chocobox_user_name', newName);
     localStorage.setItem('chocobox_user_phone', newDbPhone);
 
@@ -700,7 +737,7 @@ function saveProfileEdit() {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain' },
         body: JSON.stringify({ action: 'saveCustomer', phone: newDbPhone, name: newName })
-    }).catch(() => {});
+    }).catch(() => { });
 
     document.getElementById('profile-edit-form').style.display = 'none';
     showToast('تم تحديث البيانات');
@@ -733,10 +770,11 @@ async function loadMyOrders(phone) {
                     'جديد': 'bg-blue-100 text-blue-800',
                     'يُحضّر': 'bg-amber-100 text-amber-800',
                     'في الطريق': 'bg-green-100 text-green-800',
-                    'تم التوصيل': 'bg-gray-100 text-gray-600'
+                    'تم التوصيل': 'bg-gray-100 text-gray-600',
+                    'ملغي': 'bg-red-100 text-red-800'
                 };
                 const statusClass = statusColors[order.orderStatus] || 'bg-surface-container text-on-surface-variant';
-                
+
                 // Parse products for display
                 const items = order.products ? order.products.split(' | ') : [];
                 const itemsHTML = items.map(item => `<span class="text-xs text-on-surface-variant">${item}</span>`).join('<span class="text-xs text-on-surface-variant/50"> • </span>');
@@ -807,7 +845,25 @@ let checkoutMapObj = null;
 function setLocationUI(addr, lat, lng) {
     document.getElementById('checkout-latlng').value = `${lat},${lng}`;
     document.getElementById('checkout-address').value = addr;
-    
+
+    // Detect Ramtha automatically from address keywords
+    const isRamtha = addr.includes('الرمثا') || addr.includes('Ramtha');
+    const regionInput = document.getElementById('detected-region');
+    if (regionInput) {
+        regionInput.value = isRamtha ? 'ramtha' : 'other';
+    }
+
+    // Update UI info box
+    const infoTitle = document.getElementById('delivery-info-title');
+    const infoDesc = document.getElementById('delivery-info-desc');
+    if (infoTitle && infoDesc) {
+        infoTitle.textContent = isRamtha ? 'تم تحديد المنطقة: داخل الرمثا' : 'تم تحديد المنطقة: خارج الرمثا';
+        infoDesc.textContent = isRamtha ? 'تم تطبيق سعر توصيل الرمثا (1.00 د.أ)' : 'تم تطبيق سعر توصيل باقي مناطق الأردن (3.00 د.أ)';
+    }
+
+    // Refresh cart to update delivery fee
+    renderCart();
+
     document.getElementById('checkout-address-box').classList.remove('hidden');
     document.getElementById('checkout-address-text').textContent = addr;
     document.getElementById('checkout-map-container').classList.add('hidden');
@@ -815,7 +871,7 @@ function setLocationUI(addr, lat, lng) {
 
 function getMyLocation() {
     const btn = document.getElementById('location-auto-btn');
-    
+
     if (!navigator.geolocation) {
         showToast('المتصفح لا يدعم تحديد الموقع');
         return;
@@ -851,7 +907,7 @@ function getMyLocation() {
 function openMapSelection() {
     document.getElementById('checkout-map-container').classList.remove('hidden');
     document.getElementById('checkout-address-box').classList.add('hidden');
-    
+
     if (!checkoutMapObj) {
         checkoutMapObj = L.map('checkoutSelectionMap').setView([31.95, 35.93], 13);
         L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
@@ -881,7 +937,7 @@ async function confirmMapSelection() {
     } catch {
         setLocationUI(`إحداثيات: ${lat.toFixed(5)}, ${lng.toFixed(5)}`, lat, lng);
     }
-    
+
     document.getElementById('checkout-map-container').classList.remove('opacity-50');
     showToast('تم اعتماد الموقع من الخريطة');
 }
@@ -891,13 +947,18 @@ async function submitOrderToSheet() {
     const name = document.getElementById('checkout-name').value.trim();
     const phoneRaw = document.getElementById('checkout-phone').value.trim();
     const phone = formatPhoneForDB(phoneRaw);
-    const gov = document.getElementById('checkout-gov').value;
+    const regionInput = document.getElementById('detected-region');
+    let region = regionInput ? regionInput.value : 'other';
+    if (region === 'pending') region = 'other'; // Default to other if not detected
+    
+    const regionName = region === 'ramtha' ? 'داخل الرمثا' : 'خارج الرمثا (باقي مناطق الأردن)';
     const address = document.getElementById('checkout-address').value;
     const notes = document.getElementById('checkout-notes').value;
     const latlng = document.getElementById('checkout-latlng').value;
-
-    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-    const delivery = subtotal >= 50 ? 0 : 2;
+    
+    const subtotal = cart.reduce((sum, item) => sum + ((item.price + (item.fillingPrice || 0)) * item.qty), 0);
+    const baseDelivery = region === 'ramtha' ? 1 : 3;
+    const delivery = subtotal >= 50 ? 0 : baseDelivery;
     const total = subtotal + delivery;
 
     const productsList = cart.map(item => {
@@ -919,7 +980,7 @@ async function submitOrderToSheet() {
                 action: 'addOrder',
                 customerName: name,
                 customerPhone: phone,
-                governorate: gov,
+                governorate: regionName,
                 address: finalAddress,
                 products: productsList,
                 total: total.toFixed(2) + ' د.أ',
@@ -931,16 +992,16 @@ async function submitOrderToSheet() {
         if (data.status === 'success' && data.orderId) {
             localStorage.setItem('chocobox_last_order_id', data.orderId);
             localStorage.setItem('chocobox_last_order_phone', phone);
-            
+
             // Also save/update profile
             localStorage.setItem('chocobox_user_name', name);
             localStorage.setItem('chocobox_user_phone', phone);
             fetch(API_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'text/plain' },
-                body: JSON.stringify({ action: 'saveCustomer', phone, name, governorate: gov, address })
-            }).catch(() => {});
-            
+                body: JSON.stringify({ action: 'saveCustomer', phone, name, governorate: regionName, address })
+            }).catch(() => { });
+
             // Fill tracking inputs
             const trackIdEl = document.getElementById('track-order-id');
             const trackPhEl = document.getElementById('track-phone');
@@ -1005,39 +1066,72 @@ function renderTracking(order) {
     // Status badge
     const badge = document.getElementById('track-status-badge');
     badge.textContent = order.orderStatus;
+    
+    // Status color class for the badge
+    const badgeColors = {
+        'جديد': 'bg-blue-100 text-blue-800',
+        'يُحضّر': 'bg-amber-100 text-amber-800',
+        'في الطريق': 'bg-green-100 text-green-800',
+        'تم التوصيل': 'bg-gray-100 text-gray-600',
+        'ملغي': 'bg-red-100 text-red-800'
+    };
+    badge.className = `px-3 py-1 rounded-full text-xs font-bold ${badgeColors[order.orderStatus] || 'bg-primary-container text-on-primary-container'}`;
+
+    // Cancel Button logic
+    const cancelBtnContainer = document.getElementById('cancel-order-container');
+    if (cancelBtnContainer) {
+        if (order.orderStatus === 'جديد') {
+            cancelBtnContainer.innerHTML = `
+                <button onclick="cancelMyOrder('${order.orderId}', '${order.phone}')"
+                    class="w-full bg-error-container text-on-error-container py-3 rounded-xl font-bold text-sm hover:opacity-90 transition-all active:scale-95 shadow-none cursor-pointer border-0 flex items-center justify-center gap-2 mt-4">
+                    <span class="material-symbols-outlined text-lg">cancel</span>
+                    إلغاء الطلب
+                </button>
+            `;
+            cancelBtnContainer.style.display = 'block';
+        } else {
+            cancelBtnContainer.style.display = 'none';
+        }
+    }
 
     // Progress bar and steps
-    const statuses = ['جديد', 'يُحضّر', 'في الطريق', 'تم التوصيل'];
-    const steps = ['step-received', 'step-preparing', 'step-onway', 'step-delivered'];
-    const currentIdx = statuses.indexOf(order.orderStatus);
-    const progressPercents = [0, 33, 66, 100];
+    const progressSection = document.querySelector('#track-result-section .mt-8.px-2');
+    if (order.orderStatus === 'ملغي') {
+        if (progressSection) progressSection.style.display = 'none';
+    } else {
+        if (progressSection) progressSection.style.display = 'block';
 
-    document.getElementById('track-progress-bar').style.width = progressPercents[currentIdx] + '%';
+        const statuses = ['جديد', 'يُحضّر', 'في الطريق', 'تم التوصيل'];
+        const steps = ['step-received', 'step-preparing', 'step-onway', 'step-delivered'];
+        const currentIdx = statuses.indexOf(order.orderStatus);
+        const progressPercents = [0, 33, 66, 100];
 
-    const originalIcons = ['receipt_long', 'skillet', 'two_wheeler', 'home'];
+        if (currentIdx !== -1) {
+            document.getElementById('track-progress-bar').style.width = progressPercents[currentIdx] + '%';
 
-    steps.forEach((stepId, i) => {
-        const el = document.getElementById(stepId);
-        const circle = el.querySelector('div');
-        const label = el.querySelector('span:last-child');
+            const originalIcons = ['receipt_long', 'skillet', 'two_wheeler', 'home'];
 
-        if (i < currentIdx) {
-            // Completed
-            circle.className = 'w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center z-10 shadow-none';
-            circle.innerHTML = '<span class="material-symbols-outlined text-sm" style="font-variation-settings: \'FILL\' 1;">check</span>';
-            label.className = 'text-[10px] mt-1.5 font-medium text-on-surface-variant';
-        } else if (i === currentIdx) {
-            // Current
-            circle.className = 'w-8 h-8 rounded-full bg-surface border-4 border-primary text-primary flex items-center justify-center z-10 shadow-none';
-            circle.innerHTML = `<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">${originalIcons[i]}</span>`;
-            label.className = 'text-[10px] mt-1.5 font-bold text-primary';
-        } else {
-            // Future
-            circle.className = 'w-8 h-8 rounded-full bg-surface-container-highest text-on-surface-variant flex items-center justify-center z-10 shadow-none';
-            circle.innerHTML = `<span class="material-symbols-outlined text-sm">${originalIcons[i]}</span>`;
-            label.className = 'text-[10px] mt-1.5 font-medium text-on-surface-variant/50';
+            steps.forEach((stepId, i) => {
+                const el = document.getElementById(stepId);
+                const circle = el.querySelector('div');
+                const label = el.querySelector('span:last-child');
+
+                if (i < currentIdx) {
+                    circle.className = 'w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center z-10 shadow-none';
+                    circle.innerHTML = '<span class="material-symbols-outlined text-sm" style="font-variation-settings: \'FILL\' 1;">check</span>';
+                    label.className = 'text-[10px] mt-1.5 font-medium text-on-surface-variant';
+                } else if (i === currentIdx) {
+                    circle.className = 'w-8 h-8 rounded-full bg-surface border-4 border-primary text-primary flex items-center justify-center z-10 shadow-none';
+                    circle.innerHTML = `<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">${originalIcons[i]}</span>`;
+                    label.className = 'text-[10px] mt-1.5 font-bold text-primary';
+                } else {
+                    circle.className = 'w-8 h-8 rounded-full bg-surface-container-highest text-on-surface-variant flex items-center justify-center z-10 shadow-none';
+                    circle.innerHTML = `<span class="material-symbols-outlined text-sm">${originalIcons[i]}</span>`;
+                    label.className = 'text-[10px] mt-1.5 font-medium text-on-surface-variant/50';
+                }
+            });
         }
-    });
+    }
 
     // Order items
     const itemsEl = document.getElementById('track-order-items');
@@ -1121,6 +1215,56 @@ function initTrackingMap(order) {
             [deliveryLat, deliveryLng]
         );
         trackingMap.fitBounds(bounds, { padding: [40, 40] });
+    }
+}
+
+async function cancelMyOrder(orderId, phone) {
+    if (!confirm('هل أنت متأكد من رغبتك في إلغاء هذا الطلب؟')) return;
+
+    // We can't easily find the button without an ID or selecting by text, 
+    // but the button was just created in renderTracking.
+    const btn = document.querySelector('button[onclick*="cancelMyOrder"]');
+    const originalContent = btn ? btn.innerHTML : '';
+    
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-lg">progress_activity</span> جارٍ الإلغاء...';
+        btn.classList.add('opacity-70', 'cursor-not-allowed');
+    }
+
+    showToast('جاري إلغاء الطلب...');
+
+    try {
+        const res = await fetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain' },
+            body: JSON.stringify({
+                action: 'cancelOrder',
+                orderId: orderId,
+                phone: phone
+            })
+        });
+        const data = await res.json();
+
+        if (data.status === 'success') {
+            showToast(data.message);
+            refreshTracking(); // Refresh the tracking status
+        } else {
+            showToast(data.message || 'فشل إلغاء الطلب');
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = originalContent;
+                btn.classList.remove('opacity-70', 'cursor-not-allowed');
+            }
+        }
+    } catch (err) {
+        console.error('Cancel order error:', err);
+        showToast('حدث خطأ في الاتصال');
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = originalContent;
+            btn.classList.remove('opacity-70', 'cursor-not-allowed');
+        }
     }
 }
 
